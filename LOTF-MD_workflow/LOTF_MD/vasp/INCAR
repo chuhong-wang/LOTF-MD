@@ -1,0 +1,24 @@
+system=molecular dynamics 1000K
+ALGO=V
+MAXMIX=80
+ISMEAR = 0 ; SIGMA = 0.1
+ENMAX=420
+IBRION=0    #MD
+NSW=1
+POTIM=2.0   #Time step
+
+TEBEG=1000;TEEND=1000
+
+SMASS = 0   # canonical ensemble
+
+LWAVE=F
+LCHARG=F
+
+LSCALAPACK=.FALSE.
+
+LREAL = Auto
+
+IVDW = 12
+
+NELECT = 338
+

@@ -1,0 +1,47 @@
+# ---------- Initialize Simulation --------------------- 
+clear 
+units metal 
+#dimension 3 
+boundary p p p 
+#atom_style atomic 
+#atom_modify map array
+
+#----------- Read Topology of Input Configuration ------------
+box tilt large
+read_data start.inp
+#read_restart final.rst
+
+# ---------- Define Interatomic Potential -------------------- 
+pair_style mlip mlip.ini 
+pair_coeff * * 
+
+group Li type 1
+
+
+#neighbor 1.0 bin 
+#neigh_modify delay 10 check yes 
+
+# ---------- Run ---------------------
+velocity all create 1000 5673009 mom yes rot yes dist gaussian
+thermo 1000
+thermo_style custom step temp pe etotal press vol
+thermo_modify flush yes
+
+fix ensemble all nvt temp 1000 1000 0.1
+
+timestep 0.002
+run 10000
+unfix ensemble
+
+reset_timestep 0
+fix ensemble all nvt temp 1000 1000 0.1
+
+
+compute msdLi Li msd com no
+variable li equal "c_msdLi[4]"
+fix msdLi Li ave/time 10 1 100 c_msdLi[*] file Li.msd
+
+dump traj all custom 5000 run.atom id type xs ys zs
+
+timestep 0.002
+run 1000000
